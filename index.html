@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>𓄋erk 𐃈</title>
+
+<style>
+
+#pantalla1{
+    position: relative;
+}
+
+.axe{
+    display:inline-block;
+    animation: axeDrop 10s infinite ease-in-out;
+}
+
+
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 11px;
+    color: #9aa0a6; /* gris */
+    padding: 8px;
+    background: #000;
+}
+
+body{
+    margin:0;
+    font-family:'Segoe UI';
+    background:#000;
+    color:#fff;
+}
+
+header{
+    color:#38bdf8;
+    font-size:40px;
+    padding:15px 20px;
+}
+
+.circular-container{
+    position:relative;
+    width:90vw;
+    max-width:520px;
+    height:90vw;
+    max-height:520px;
+    margin:40px auto;
+}
+
+.card{
+    position:absolute;
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+    font-size:11px;
+    line-height:1.2;
+    padding:6px;
+
+    font-weight:700; /* ✅ NEGRITA */
+
+    cursor:pointer;
+    color:#000;
+
+    transform: translate(-50%, -50%) scale(1);
+    transform-origin: center;
+
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+    box-sizing: border-box;
+
+    box-shadow:
+        inset -8px -8px 15px rgba(0,0,0,0.4),
+        inset 8px 8px 15px rgba(255,255,255,0.2),
+        0 10px 20px rgba(0,0,0,0.6);
+}
+
+
+.card:hover{
+    transform: translate(-50%, -50%) scale(1.12);
+    box-shadow:
+        inset -10px -10px 20px rgba(0,0,0,0.5),
+        inset 10px 10px 20px rgba(255,255,255,0.25),
+        0 15px 25px rgba(0,0,0,0.8);
+}
+
+.center{ width:150px;height:150px; font-size:16px;}
+.medium{ width:113px;height:113px;}
+.small{ width:81px;height:81px;}
+
+.color1{
+    background: radial-gradient(circle at 30% 30%, #72f2ff, #0077b6);
+}
+.color2{ 
+    background: radial-gradient(circle at 30% 30%, #ffd27f, #ff6f00);
+}
+.color3{ 
+    background: radial-gradient(circle at 30% 30%, #ff80ab, #c2185b);
+}
+.color4{ 
+    background: radial-gradient(circle at 30% 30%, #ffff7a, #d4c000);
+}
+.color5{ 
+    background: radial-gradient(circle at 30% 30%, #7affc8, #00a86b);
+}
+
+
+.circular-tiempo{
+    position:relative;
+    width:90vw;
+    max-width:520px;
+    height:90vw;
+    max-height:520px;
+    margin:20px auto;
+}
+
+.card-tiempo{
+    position:absolute;
+    width:85px;
+    height:85px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+font-weight: 700;    color:#000;
+    cursor:pointer;
+
+    transform:translate(-50%,-50%);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    /* ✅ 3D */
+    box-shadow:
+        inset -6px -6px 12px rgba(0,0,0,0.4),
+        inset 6px 6px 12px rgba(255,255,255,0.25),
+        0 8px 15px rgba(0,0,0,0.6);
+}
+
+
+.card-tiempo:hover{
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.card::after,
+.card-tiempo::after{
+    content:"";
+    position:absolute;
+    top:15%;
+    left:20%;
+    width:40%;
+    height:30%;
+    background:radial-gradient(circle, rgba(255,255,255,0.5), transparent);
+    border-radius:50%;
+    pointer-events:none;
+}
+
+.reporteBtn{
+    position:absolute;
+    top:70px;
+    right:20px;
+    padding:10px 25px;
+    background:#22c55e;
+    border:none;
+    border-radius:10px;
+    color:#fff;
+    cursor:pointer;
+}
+/* ✅ NUEVO CONTENEDOR REPORTE */
+.reporte-container{
+    width:600px;
+    max-width:90%;
+    margin:40px auto;
+    text-align:center;
+}
+
+/* ✅ BOTONES SUPERIORES */
+.top-buttons{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin-bottom:15px;
+}
+
+.top-buttons button{
+    background:#38bdf8;
+    border:none;
+    padding:10px 20px;
+    color:#fff;
+    border-radius:10px;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.top-buttons button:hover{
+    background:#0ea5e9;
+}
+
+/* ✅ TABLA CENTRADA */
+#tablaHistorial{
+    background:#e5e5e5;
+    color:#000;
+    padding:12px;
+    border-radius:10px;
+    text-align:left;
+}
+
+.hidden{display:none;}
+
+@media (max-width: 768px){
+
+    header{
+        font-size:24px;
+        text-align:center;
+    }
+
+    .center{
+        width:110px;
+        height:110px;
+        font-size:12px;
+    }
+
+    .medium{
+        width:80px;
+        height:80px;
+        font-size:10px;
+    }
+
+    .small{
+        width:65px;
+        height:65px;
+        font-size:9px;
+    }
+
+    .card-tiempo{
+        width:65px;
+        height:65px;
+        font-size:10px;
+    }
+
+@media (max-width: 768px){
+
+    .reporteBtn{
+        position:relative;
+        display:block;
+        margin:10px auto 0 auto;
+        top:auto;
+        right:auto;
+    }
+
+}
+    .top-buttons{
+        flex-direction:column;
+        align-items:center;
+    }
+
+    .top-buttons button{
+        width:90%;
+        max-width:300px;
+    }
+
+    #tablaHistorial{
+        font-size:12px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<header>𓄋erk <span class="axe">𐃈</span></header>
+
+<!-- P1 -->
+<div id="pantalla1">
+<div id="circle1" class="circular-container"></div>
+<button class="reporteBtn" onclick="irReporte()">VER REPORTE</button>
+</div>
+
+<!-- P2 -->
+<div id="pantalla2" class="hidden">
+<div id="circle2" class="circular-container"></div>
+</div>
+
+<!-- P3 -->
+<div id="pantalla3" class="hidden">
+<div id="tiempoGrid" class="circular-tiempo"></div>
+</div>
+
+<!-- ✅ P4 ACTUALIZADA -->
+<div id="pantalla4" class="hidden">
+
+<div class="reporte-container">
+
+    <div class="top-buttons">
+        <button onclick="volverInicio()">Inicio</button>
+        <button onclick="exportar()">Exportar</button>
+        <button onclick="reiniciar()">Reiniciar</button>
+    </div>
+
+    <div id="tablaHistorial"></div>
+<canvas id="graficaHoras" style="margin-top:20px;"></canvas>
+</div>
+
+</div>
+
+<script>
+
+/* DATOS (IGUAL) */
+const lista1 = ["Act de SW","Agilidad","Análisis  / Investigación","Apoyo","Auditorías","Boletines   /   Protocolos","Contrato","Cuentas de Acceso","Dar capacitación","Desarrollos","Entregas","Fallas","Homologación","Junta de Staff","Ventanas de Mtto","Recibir Capacitación","Mtto de BD","Proyecto","Pruebas","Reporte","Reuniones"];
+
+const lista2 = ["AITX","AIR","AIAX","AIDX","ALTA HCA","Analisis","Apoyo a Evolución","BAJA HCA","BOLETINES","CAPINHOUSE","Daily","ENTREGAS","ERICSSON","EVO","EXFO","HOMOLOGACION","HUAWEI","IDC","INGRF","INGTX","Investigacion","JUNTA","MIMOSA","MIR","NOKIA","ENTREGA","PROTEUS","PROTOCOLOS","RAISECOM","Seguimiento a fallas","SIKLU","SCRIPT MWS","TELLABS","UI"];
+
+let seleccion1="", seleccion2="", tiempoSel="", registros=[];
+
+let dataGuardada = localStorage.getItem("verk_registros");
+if(dataGuardada){
+    registros = JSON.parse(dataGuardada);
+}
+
+function getColor(i){
+    const colores=["color1","color2","color3","color4","color5"];
+    return colores[i % colores.length];
+}
+
+/* RADIAL (igual) */
+function crearRadial(lista, contenedor){
+
+    const c=document.getElementById(contenedor);
+    c.innerHTML="";
+let size = c.getBoundingClientRect().width || 520;
+
+    let centroItem = (contenedor==="circle1") ? "Fallas" : lista[0];
+
+    crearNodo(centroItem,0,0,"center color1");
+
+    let resto = lista.filter(x=>x!==centroItem);
+
+let capas;
+
+if(window.innerWidth <= 768){
+
+    if(contenedor==="circle1"){
+        // ✅ pantalla 1 (no tocar mucho)
+        capas = [
+            {radio: size * 0.26, cantidad:8, size:"medium"},
+            {radio: size * 0.38, cantidad:20, size:"small"}
+        ];
+    }else{
+        // ✅ pantalla 2 (AQUI ESTA EL FIX REAL)
+        capas = [
+            {radio: size * 0.24, cantidad:10, size:"medium"},
+            {radio: size * 0.34, cantidad:24, size:"small"}
+        ];
+    }
+
+}else{
+
+    // ✅ tu comportamiento original (no se toca)
+    capas = (contenedor==="circle1")
+    ?[
+        {radio: size * 0.28, cantidad:8,  size:"medium"},
+        {radio: size * 0.42, cantidad:20, size:"small"}
+    ]
+    :[
+        {radio: size * 0.30, cantidad:10, size:"medium"},
+        {radio: size * 0.46, cantidad:24, size:"small"}
+    ];
+}
+
+    let index=0;
+
+    capas.forEach((capa,capaIndex)=>{
+        let slice = resto.slice(index, index + capa.cantidad);
+
+        slice.forEach((item,i)=>{
+            let ang = (i / slice.length) * (2*Math.PI);
+            ang += (capaIndex % 2) * (Math.PI / slice.length);
+
+            let x = Math.cos(ang) * capa.radio;
+            let y = Math.sin(ang) * capa.radio;
+
+            crearNodo(item,x,y,`${capa.size} ${getColor(index+i)}`);
+        });
+
+        index+=capa.cantidad;
+    });
+
+    function crearNodo(text,x,y,clases){
+        let d=document.createElement("div");
+        d.className="card "+clases;
+       d.innerHTML = `<span style="display:flex; align-items:center; justify-content:center; text-align:center; width:100%; height:100%;">${text}</span>`;
+
+
+        d.style.left=`calc(50% + ${x}px)`;
+        d.style.top=`calc(50% + ${y}px)`;
+
+        d.onclick=()=>{
+            if(contenedor==="circle1"){
+                seleccion1=text;
+                pantalla1.classList.add("hidden");
+                pantalla2.classList.remove("hidden");
+            }else{
+                seleccion2=text;
+                pantalla2.classList.add("hidden");
+                pantalla3.classList.remove("hidden");
+            }
+        };
+
+        c.appendChild(d);
+    }
+}
+/* INIT */
+window.addEventListener("load", () => {
+    crearRadial(lista1,"circle1");
+    crearRadial(lista2,"circle2");
+});
+
+
+/* TIEMPO (igual que ya tenías modificado antes) */
+function generarMatrizTiempo(){
+
+    let tiempos=[];
+    for(let h=0;h<=12;h++){
+        ["00","15","30","45"].forEach(m=>{
+            let t=`${String(h).padStart(2,"0")}:${m}`;
+            if(t>="00:30" && t<="07:30"){
+                tiempos.push(t);
+            }
+        });
+    }
+
+    const cont=document.getElementById("tiempoGrid");
+    cont.innerHTML="";
+
+    crearTiempo("00:30",0,0,0);
+
+    let resto=tiempos.filter(x=>x!=="00:30");
+
+let size = cont.getBoundingClientRect().width || 520;
+let radios;
+
+if(window.innerWidth <= 768){
+    radios = [
+        size * 0.20,
+        size * 0.30,
+        size * 0.40
+    ];
+}else{
+    radios = [
+        size * 0.24,
+        size * 0.38,
+        size * 0.50
+    ];
+}
+    let index=0;
+
+    radios.forEach((radio,capaIndex)=>{
+        let cantidad=10 + capaIndex*8;
+        let slice=resto.slice(index,index+cantidad);
+
+        slice.forEach((item,i)=>{
+            let ang=i/slice.length*2*Math.PI;
+            let x=Math.cos(ang)*radio;
+            let y=Math.sin(ang)*radio;
+
+            crearTiempo(item,x,y,index+i);
+        });
+
+        index+=cantidad;
+    });
+
+    function crearTiempo(text,x,y,i){
+        let d=document.createElement("div");
+d.className="card-tiempo "+getColor(i);
+
+// ✅ SOLO 00:30 → 30% más grande
+if(text==="00:30"){
+    d.style.width = "110px";   // 85px * 1.3 ≈ 110px
+    d.style.height = "110px";
+    d.style.fontSize = "1.2em"; // opcional para mantener proporción
+}        d.innerHTML = `<span style="display:flex; align-items:center; justify-content:center; text-align:center; width:100%; height:100%;">${text}</span>`;
+
+        d.style.left=`calc(50% + ${x}px)`;
+        d.style.top=`calc(50% + ${y}px)`;
+
+        d.onclick=()=>{
+            tiempoSel=text;
+            finalizar();
+        };
+
+        cont.appendChild(d);
+    }
+}
+
+function finalizar(){
+
+    let ahora = new Date();
+
+    let fecha = ahora.toLocaleDateString("es-MX", {
+        day: "2-digit",
+        month: "2-digit"
+    });
+
+    registros.push({
+        categoria: seleccion1,
+        detalle: seleccion2,
+        tiempo: tiempoSel,
+        fecha: fecha   // ✅ NUEVO CAMPO
+    });
+
+    pantalla3.classList.add("hidden");
+    pantalla1.classList.remove("hidden");
+}
+
+function irReporte(){
+    pantalla1.classList.add("hidden");
+    pantalla4.classList.remove("hidden");
+    renderHistorial();
+    generarGrafica(); // ✅ NUEVO
+}
+
+function volverInicio(){
+
+    localStorage.setItem("verk_registros", JSON.stringify(registros)); // ✅ GUARDADO
+
+    pantalla4.classList.add("hidden");
+    pantalla1.classList.remove("hidden");
+}
+
+function renderHistorial(){
+    tablaHistorial.innerHTML = registros.map((r,i)=>
+    `
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; padding:5px; background:#ffffff; border-radius:6px;">
+        
+        <span>
+            ${i+1}. ${r.categoria} | ${r.detalle} | ${r.tiempo} | ${r.fecha}
+        </span>
+
+        <button onclick="eliminarRegistro(${i})" style="
+            background:#ef4444;
+            color:#fff;
+            border:none;
+            padding:5px 10px;
+            border-radius:6px;
+            cursor:pointer;
+        ">
+            X
+        </button>
+
+    </div>
+    `
+    ).join("");
+}
+
+
+function exportar(){}
+function reiniciar(){registros=[];renderHistorial();}
+
+generarMatrizTiempo();
+
+function convertirTiempoAHoras(t){
+    let [h,m] = t.split(":").map(Number);
+    return h + (m/60);
+}
+function generarGrafica(){
+
+    let acumulado = {};
+
+    registros.forEach(r=>{
+        if(!acumulado[r.fecha]) acumulado[r.fecha]=0;
+        acumulado[r.fecha] += convertirTiempoAHoras(r.tiempo);
+    });
+
+    let labels = Object.keys(acumulado);
+    let datos = Object.values(acumulado);
+
+    // ✅ Colores por regla
+    let colores = datos.map(v => v >= 9 ? "#22c55e" : "#f97316");
+
+    const ctx = document.getElementById("graficaHoras").getContext("2d");
+
+    if(window.miGrafica){
+        window.miGrafica.destroy();
+    }
+
+    window.miGrafica = new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "Horas por día",
+                data: datos,
+                backgroundColor: colores
+            }]
+        },
+        options: {
+            scales: {
+
+                x: {
+                    ticks: { color: "#38bdf8" },
+                    grid: { color: "#38bdf855" }
+                },
+
+                y: {
+                    ticks: { color: "#38bdf8" },
+                    grid: { color: "#38bdf855" },
+                    beginAtZero: true
+                }
+            },
+
+            plugins: {
+                legend: {
+                    labels: { color:"#38bdf8" }
+                }
+            }
+        },
+
+        plugins: [{
+            id: 'lineaMeta',
+            afterDraw(chart){
+
+                const {ctx, chartArea:{left,right}, scales:{y}} = chart;
+
+                let yPos = y.getPixelForValue(9);
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.moveTo(left, yPos);
+                ctx.lineTo(right, yPos);
+                ctx.strokeStyle = "#22c55e";
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.restore();
+            }
+        }]
+    });
+}
+function eliminarRegistro(index){
+
+    let confirmar = confirm("¿Eliminar este registro?");
+
+    if(!confirmar) return;
+
+    registros.splice(index,1);
+
+    renderHistorial();
+
+    // ✅ refresca gráfica también
+    if(typeof generarGrafica === "function"){
+        generarGrafica();
+    }
+}
+
+</script>
+<div class="footer">
+    Soporte Técnico | Dirección de Operación y Administración de la Red
+</div>
+</body>
+</html>
