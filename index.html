@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="UTF-8">
@@ -276,6 +278,104 @@ font-weight: 700;    color:#000;
 <body>
 
 <header>𓄋erk <span class="axe">𐃈</span></header>
+<!-- AGREGA ESTO DEBAJO DEL HEADER -->
+
+<button id="btnConfig" onclick="abrirConfig()" style="
+position:absolute;
+top:15px;
+right:15px;
+background:#111;
+border:none;
+color:#38bdf8;
+font-size:22px;
+cursor:pointer;
+z-index:20;
+">
+⚙️
+</button>
+
+<!-- MODAL CONFIG -->
+<div id="configPanel" class="hidden" style="
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#000;
+z-index:50;
+overflow:auto;
+padding:20px;
+">
+
+<h2 style="color:#38bdf8;text-align:center;">Configuración</h2>
+
+<div style="
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+margin-top:20px;
+">
+
+<div>
+    <h3 style="text-align:center;">Pantalla 1</h3>
+    <div id="chk1"></div>
+</div>
+
+<div>
+    <h3 style="text-align:center;">Pantalla 2</h3>
+    <div id="chk2"></div>
+</div>
+
+</div>
+
+<div style="
+position:absolute;
+top:10px;
+right:60px; /* ✅ desplazado hacia la izquierda */
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+z-index:60;
+">
+
+<button onclick="guardarConfig()" style="
+padding:8px 15px;
+background:#22c55e; /* ✅ VERDE */
+color:#fff;
+border:none;
+border-radius:6px;
+cursor:pointer;
+">
+Guardar
+</button>
+
+<button onclick="resetConfig()" style="
+padding:8px 15px;
+background:#ef4444; /* ✅ ROJO */
+color:#fff;
+border:none;
+border-radius:6px;
+cursor:pointer;
+">
+Reset
+</button>
+
+<button onclick="irInicioDesdeConfig()" style="
+padding:8px 15px;
+background:#38bdf8; /* ✅ CELESTE */
+color:#fff;
+border:none;
+border-radius:6px;
+cursor:pointer;
+">
+Inicio
+</button>
+
+
+</div>
+
+
+</div>
 
 <!-- P1 -->
 <div id="pantalla1">
@@ -340,7 +440,16 @@ let size = c.getBoundingClientRect().width || 520;
 
     crearNodo(centroItem,0,0,"center color1");
 
-    let resto = lista.filter(x=>x!==centroItem);
+let listaFiltrada = (contenedor==="circle1")
+    ? filtros.p1
+    : filtros.p2;
+
+// asegura que centro SIEMPRE exista
+if(!listaFiltrada.includes(centroItem)){
+    listaFiltrada.unshift(centroItem);
+}
+
+let resto = listaFiltrada.filter(x=>x!==centroItem);
 
 let capas;
 
@@ -428,9 +537,9 @@ function generarMatrizTiempo(){
 
     let tiempos=[];
     for(let h=0;h<=12;h++){
-        ["00","15","30","45"].forEach(m=>{
+        ["00","30"].forEach(m=>{
             let t=`${String(h).padStart(2,"0")}:${m}`;
-            if(t>="00:30" && t<="07:30"){
+            if(t>="00:30" && t<="09:30"){
                 tiempos.push(t);
             }
         });
@@ -656,6 +765,87 @@ function eliminarRegistro(index){
     if(typeof generarGrafica === "function"){
         generarGrafica();
     }
+}
+
+let filtros = JSON.parse(localStorage.getItem("verk_filtros")) || {
+    p1: [...lista1],
+    p2: [...lista2]
+};
+
+function abrirConfig(){
+    configPanel.classList.remove("hidden");
+    renderChecks();
+}
+
+function cerrarConfig(){
+    configPanel.classList.add("hidden");
+
+    // ✅ aseguramos retorno a inicio
+    pantalla2.classList.add("hidden");
+    pantalla3.classList.add("hidden");
+    pantalla4.classList.add("hidden");
+    pantalla1.classList.remove("hidden");
+}
+
+function renderChecks(){
+
+    chk1.innerHTML = lista1.map(item => `
+    <label style="display:block;">
+        <input type="checkbox"
+            ${filtros.p1.includes(item) ? "checked" : ""}
+            value="${item}">
+        ${item}
+    </label>`).join("");
+
+    chk2.innerHTML = lista2.map(item => `
+    <label style="display:block;">
+        <input type="checkbox"
+            ${filtros.p2.includes(item) ? "checked" : ""}
+            value="${item}">
+        ${item}
+    </label>`).join("");
+}
+
+function guardarConfig(){
+
+    filtros.p1 = [...chk1.querySelectorAll("input:checked")].map(i=>i.value);
+    filtros.p2 = [...chk2.querySelectorAll("input:checked")].map(i=>i.value);
+
+    localStorage.setItem("verk_filtros", JSON.stringify(filtros));
+
+    cerrarConfig();
+
+    // ✅ refresca vistas
+    crearRadial(lista1,"circle1");
+    crearRadial(lista2,"circle2");
+
+alert("CONFIGURACION GUARDADA");
+
+}
+
+function irInicioDesdeConfig(){
+
+    configPanel.classList.add("hidden");
+
+    pantalla2.classList.add("hidden");
+    pantalla3.classList.add("hidden");
+    pantalla4.classList.add("hidden");
+
+    pantalla1.classList.remove("hidden");
+}
+
+function resetConfig(){
+
+    // ✅ selecciona TODOS
+    filtros.p1 = [...lista1];
+    filtros.p2 = [...lista2];
+
+    localStorage.setItem("verk_filtros", JSON.stringify(filtros));
+
+    // ✅ refresca checkboxes en pantalla
+    renderChecks();
+
+    alert("CONFIGURACION RESETEADA");
 }
 
 </script>
