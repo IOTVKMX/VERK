@@ -294,6 +294,26 @@ z-index:20;
 ⚙️
 </button>
 
+<div onclick="mostrarHelp()" style="
+position:absolute;
+right:55px;
+top:15px;
+width:30px;
+height:30px;
+background:#1e293b;
+color:#38bdf8;
+border-radius:50%;
+display:flex;
+justify-content:center;
+align-items:center;
+cursor:pointer;
+font-weight:bold;
+z-index:20;
+">
+?
+</div>
+
+
 <!-- MODAL CONFIG -->
 <div id="configPanel" class="hidden" style="
 position:fixed;
@@ -848,9 +868,86 @@ function resetConfig(){
     alert("CONFIGURACION RESETEADA");
 }
 
+function mostrarHelp(){
+    document.getElementById("helpModal").style.display = "block";
+}
+
+function cerrarHelp(){
+    document.getElementById("helpModal").style.display = "none";
+}
+
+// cerrar al hacer click fuera
+window.onclick = function(e){
+    let modal = document.getElementById("helpModal");
+    if(e.target === modal){
+        cerrarHelp();
+    }
+}
+
 </script>
 <div class="footer">
     Soporte Técnico | Dirección de Operación y Administración de la Red
 </div>
+
+<div id="helpModal" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.5);
+z-index:9999;
+">
+
+<div style="
+background:#f1f5f9;
+width:400px;
+max-width:90%;
+margin:100px auto;
+padding:20px;
+border-radius:10px;
+position:relative;
+color:#000;
+font-size:13px;
+">
+
+<div onclick="cerrarHelp()" style="
+position:absolute;
+top:10px;
+right:15px;
+cursor:pointer;
+font-weight:bold;
+">
+X
+</div>
+
+<h3 style="color:#2563eb;margin-top:0;">AYUDA - Verk</h3>
+
+<p>
+<b>𓄋erk 𐃈 </b>es una herramienta de captura de actividades y tiempos.<br><br>
+
+Te mostrará una interfaz sencilla donde podras seleccionar:
+</p>
+
+<ul>
+<li>Actividad principal</li>
+<li>Subcategoria de actividad</li>
+<li>tiempo de duracion de la actividad en Hrs.</li>
+</ul>
+
+<p>
+<b>con solo 3 clicks registras tu actividad!</b><br><br>
+
+En el botón de <b>Ver Reporte</b>, podrás ver el registro de tus actividades.<br>
+Ahí también podrás editar, exportar o reiniciar la lista de actividades.
+<br><br>
+
+En el boton de Configuracion (⚙️), podrás editar la lista de esferas ajustada a tus actividades diaras, de esta manera optimizas la interfaz de la aplicacion.
+</p>
+
+</div>
+</div>
+
 </body>
 </html>
